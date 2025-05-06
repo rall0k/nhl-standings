@@ -21,6 +21,36 @@
     <section class="nhl-standings" @vue:mounted="mounted">
         <section class="conference" v-for="conference in standings">
             <h1>{{ conference.conference.name }}</h1>
+			<section class="first-round-container">
+				<span class="title">Round 1:</span>
+				<section class="first-round">
+					<section class="serie">
+						<img :src="`public/logos/${conference?.division[0]?.standings[0]?.logo}`" alt="">
+						<span class="vs">@</span>
+						<img :src="`public/logos/${conference?.wildCard?.standings[0]?.logo}`" alt="" v-if="conference?.division[0]?.standings[0]?.points <= conference?.division[1]?.standings[0]?.points">
+						<img :src="`public/logos/${conference?.wildCard?.standings[1]?.logo}`" alt="" v-else>
+					</section>
+					<div class="delimiter">|</div>
+					<section class="serie">
+						<img :src="`public/logos/${conference?.division[0]?.standings[1]?.logo}`" alt="">
+						<span class="vs">@</span>
+						<img :src="`public/logos/${conference?.division[0]?.standings[2]?.logo}`" alt="">
+					</section>
+					<div class="delimiter">|</div>
+					<section class="serie">
+						<img :src="`public/logos/${conference?.division[1]?.standings[0]?.logo}`" alt="">
+						<span class="vs">@</span>
+						<img :src="`public/logos/${conference?.wildCard?.standings[0]?.logo}`" alt="" v-if="conference?.division[0]?.standings[0]?.points > conference?.division[1]?.standings[0]?.points">
+						<img :src="`public/logos/${conference?.wildCard?.standings[1]?.logo}`" alt="" v-else>
+					</section>
+					<div class="delimiter">|</div>
+					<section class="serie">
+						<img :src="`public/logos/${conference?.division[1]?.standings[1]?.logo}`" alt="">
+						<span class="vs">@</span>
+						<img :src="`public/logos/${conference?.division[1]?.standings[2]?.logo}`" alt="">
+					</section>
+				</section>
+			</section>
             <section class="division" v-for="division in conference.division">
                 <h2>{{ division.name }}</h2>
                 <section class="standings">

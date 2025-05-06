@@ -17,6 +17,9 @@ h2 {
 }
 body {
     .header-app {
+		position: sticky;
+		top: 0;
+		background: white;
         display: flex;
         align-items: center;
         gap: 2rem;
@@ -67,6 +70,41 @@ body {
             width: 100%;
             
             h1 {}
+			.first-round-container {
+				display: flex;
+				gap: 1rem;
+				flex-direction: column;
+				align-items: start;
+				margin-bottom: 1rem;
+
+				.title {
+					text-transform: uppercase;
+					font-size: .8rem;
+					font-weight: 700;
+				}
+				.first-round {
+					display: flex;	
+					gap: 1rem;
+
+					.serie {
+						display: flex;
+						justify-items: center;
+						gap: .5rem;
+
+						img {
+							width: 2rem;
+							align-self: center;
+						}
+						.vs {
+							align-self: center;
+						}
+					}
+					.delimiter {
+						color: #acacac;
+						align-self: center;
+					}
+				}
+			}
             .division, .wild-card {
                 display: flex;
                 flex-direction: column;
@@ -82,7 +120,6 @@ body {
                     height: 4rem;
                     width: 100%;
                     display: flex;
-                    justify-content: stretch;
                     align-items: center;
                     gap: 1rem;
                     
@@ -99,6 +136,7 @@ body {
                     }
                     .logo {
                         width: 1.5rem;
+						align-self: center;
                     }
                     .shortcut {
                         width: 2.5rem;
