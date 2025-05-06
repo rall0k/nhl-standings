@@ -42,6 +42,7 @@ body {
             color: white;
             border-radius: 2px;
             transition: 250ms;
+
             &:hover {
                 cursor: pointer;
                 opacity: .7;
@@ -87,6 +88,10 @@ body {
                     
                     &:last-child {
                         border-bottom: 1px solid #acacac;
+                    }
+
+                    &.no-playoff {
+                        opacity: .5;
                     }
                     
                     .position {
