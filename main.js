@@ -292,82 +292,120 @@ createApp({
         }
     ],
     mounted() {
+        this.generateStandings()
+    },
+    standings: [
+        {
+            conference: {
+                name: "West Conference",
+                shortcut: "W"
+            },
+            division: [
+                {
+                    name: "Central Division",
+                    short: "C",
+                    standings: []
+                },
+                {
+                    name: "Pacific Division",
+                    short: "P",
+                    standings: []
+                }
+            ],
+            wildCard: {
+                name: "Wild Card",
+                shortcut: "WC",
+                standings: []
+            }
+        },
+        {
+            conference: {
+                name: "West Conference",
+                shortcut: "W"
+            },
+            division: [
+                {
+                    name: "Metropolitan Division",
+                    short: "M",
+                    standings: [],
+                },
+                {
+                    name: "Atlantic Division",
+                    short: "A",
+                    standings: [],
+                }
+            ],
+            wildCard: {
+                name: "Wild Card",
+                shortcut: "WC",
+                standings: []
+            }
+        }
+    ],
+    generateStandings() {
         this.generatePoints()
-        this.getPlayoffTeams()
-    },
-    standings: {
-        W: {
-            C: [],
-            P: [],
-            wildCard: []
-        },
-        E: {
-            M: [],
-            A: [],
-            wildCard: []
-        },
-    },
-    getPlayoffTeams() {
-        const divisions = ['A', 'C', 'M', 'P']
-        const eastDivisions = ['A', 'M']
-        const westDivisions = ['C', 'P']
+        
+        const divisions = ['A', 'M', 'C', 'P'];
+        const eastDivisions = ['A', 'M'];
+        const westDivisions = ['C', 'P'];
     
-        // Inicializácia standings objektu
-        this.standings = {
-            W: {
-                C: [],
-                P: [],
-                wildCard: []
+        // Vyčisti standings
+        this.standings = [
+            {
+                conference: { name: "Western Conference", shortcut: "W" },
+                division: [
+                    { name: "Central Division", short: "C", standings: [] },
+                    { name: "Pacific Division", short: "P", standings: [] }
+                ],
+                wildCard: {
+                    name: "Wild Card",
+                    shortcut: "WC",
+                    standings: []
+                }
             },
-            E: {
-                M: [],
-                A: [],
-                wildCard: []
-            },
-        }
+            {
+                conference: { name: "Eastern Conference", shortcut: "E" },
+                division: [
+                    { name: "Metropolitan Division", short: "M", standings: [] },
+                    { name: "Atlantic Division", short: "A", standings: [] }
+                ],
+                wildCard: {
+                    name: "Wild Card",
+                    shortcut: "WC",
+                    standings: []
+                }
+            }
+        ];
     
-        // 1. Zoskupiť tímy podľa divízií
-        const grouped = {
-            A: [],
-            C: [],
-            M: [],
-            P: []
-        }
-    
+        // Zoskupiť tímy podľa divízií a zoradiť podľa bodov
+        const grouped = { A: [], M: [], C: [], P: [] };
         this.teams.forEach(team => {
-            const div = team.division
-            if (grouped[div]) grouped[div].push(team)
-        })
+            if (grouped[team.division]) grouped[team.division].push(team);
+        });
+        divisions.forEach(div => {
+            grouped[div].sort((a, b) => b.points - a.points);
+        });
     
-        // 2. Zoradiť každú divíziu podľa bodov
+        const wildcards = { E: [], W: [] };
+    
+        // Pridanie top 3 tímov z každej divízie a zvyšné idú do wild card poolu
         for (const div of divisions) {
-            grouped[div].sort((a, b) => b.points - a.points)
+            const topThree = grouped[div].slice(0, 3);
+            const rest = grouped[div].slice(3);
+            const conf = eastDivisions.includes(div) ? 'E' : 'W';
+    
+            const confIndex = conf === 'E' ? 1 : 0;
+            const divIndex = this.standings[confIndex].division.findIndex(d => d.short === div);
+            this.standings[confIndex].division[divIndex].standings = topThree;
+            wildcards[conf].push(...rest);
         }
     
-        // 3. Pridať top 3 do standings.division
-        for (const div of eastDivisions) {
-            this.standings.E[div] = grouped[div].slice(0, 3) // Top 3 pre východné divízie
-        }
-        for (const div of westDivisions) {
-            this.standings.W[div] = grouped[div].slice(0, 3) // Top 3 pre západné divízie
-        }
-    
-        // 4. Získať zvyšné tímy pre wildCard
-        const eastRemaining = [
-            ...grouped.A.slice(3),
-            ...grouped.M.slice(3)
-        ]
-        const westRemaining = [
-            ...grouped.C.slice(3),
-            ...grouped.P.slice(3)
-        ]
-    
-        // 5. Zoradiť a pridať tímy do wildCard (2 divoké karty na konferenciu)
-        eastRemaining.sort((a, b) => b.points - a.points)
-        westRemaining.sort((a, b) => b.points - a.points)
-    
-        this.standings.E.wildCard = eastRemaining // Pridaj wild card pre východ
-        this.standings.W.wildCard = westRemaining // Pridaj wild card pre západ
+        // Zoradiť wild card tímy a pridať najlepšie 2 do standings
+        ['E', 'W'].forEach(conf => {
+            wildcards[conf].sort((a, b) => b.points - a.points);
+            const confIndex = conf === 'E' ? 1 : 0;
+            this.standings[confIndex].wildCard.standings = wildcards[conf];
+        })
     },    
     randomNum(min, max) {
         return Math.floor(Math.random() * (max - min + 1)) + min
@@ -377,4 +415,4 @@ createApp({
             team.points = this.randomNum(50, 120)
         })
     }
-}).mount("#nhl-standings")
+}).mount("#nhl-standings-generator")
