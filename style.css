@@ -84,7 +84,11 @@ body {
 				}
 				.first-round {
 					display: flex;	
-					gap: 1rem;
+					gap: .5rem;
+
+					@media(min-width: 600px) {
+						gap: 1rem;
+					}
 
 					.serie {
 						display: flex;
