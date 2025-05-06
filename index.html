@@ -36,7 +36,7 @@
             <section class="wild-card">
                 <h2>{{ conference.wildCard.name }}</h2>
                 <section class="standings">
-                    <section class="row" v-for="team, position in conference.wildCard.standings">
+                    <section :class="{ 'row': true, 'no-playoff': position >= 2 }" v-for="team, position in conference.wildCard.standings">
                         <div class="position">{{ position + 1}}</div>
                         <img :src="`public/logos/${team.logo}`" alt="" class="logo">
                         <div class="shortcut">{{ team.shortcut }}</div>
